@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Canvas Follow Mouse</title>
+  <style>
+    canvas {
+      border: #333 10px solid;
+      max-width: 100vw;
+      max-height: 100vh;
+    }
+
+    body {
+      padding: 50px;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="myCanvas" width="550px" height="350px"></canvas>
+
+  <script>
+    var canvas = document.querySelector("#myCanvas");
+    var context = canvas.getContext("2d");
+
+function getPosition(el) {
+  var xPosition = 0;
+  var yPosition = 0;
+
+  while (el) {
+    xPosition += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+    yPosition += (el.offsetTop - el.scrollTop + el.clientTop);
+    el = el.offsetParent;
+  }
+  return {
+    x: xPosition,
+    y: yPosition
+  };
+}
+var canvasPos = getPosition(canvas);
+var mouseX = 0;
+var mouseY = 0;
+var color = 'black';
+var r = 5;
+canvas.addEventListener("mousemove", setMousePosition, false);
+document.addEventListener('keydown',check,false);
+
+function setMousePosition(e) {
+  mouseX = e.clientX - canvasPos.x;
+  mouseY = e.clientY - canvasPos.y;
+  //console.log(mouseX)
+}
+
+function check(e) {
+  if (e.keyCode == '66'){
+    color = 'blue'
+  }
+  if (e.keyCode == '71'){
+    color = 'green'
+  }
+  if (e.keyCode == '82'){
+    color = 'red'
+  }
+  if (e.keyCode == '89'){
+    color = 'yellow'
+  }
+  if (e.keyCode == '38'){
+    r = r+4
+  }
+  if (e.keyCode == '40'){
+    if (r>4){
+      r = r-4
+    }
+    else{
+      r = 1
+    }
+
+  }
+  if (e.keyCode == '32'){
+    context.clearRect(0, 0, canvas.width, canvas.height)
+  }
+}
+
+function update() {
+  context.beginPath();
+  context.arc(mouseX, mouseY-r, r, 0, 2 * Math.PI, true);
+  context.fillStyle = color;
+  context.fill();
+
+  requestAnimationFrame(update);
+}
+update();
+
+
+
+  </script>
+
+</body>
+
+</html>
